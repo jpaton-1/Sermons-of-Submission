@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sermons of Submission: Scholarly Edition</title>
+    <title>Sermons of Submission: Interactive Experience</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --background-main: #F5F5F4;  /* Stone 100 */
+            --background-main: #F5F5F4;
             --background-card: #FFFFFF;
-            --text-primary: #292524;    /* Stone 800 */
-            --text-secondary: #78716C;  /* Stone 500 */
-            --border-color: #E7E5E4;    /* Stone 200 */
-            --accent-primary: #2DD4BF;  /* Teal accent from before */
-            --amber-accent: #D97706;    /* Amber 600 */
-            --teal-accent: #0D9488;     /* Teal 600 */
-            --slate-accent: #475569;    /* Slate 600 */
+            --text-primary: #292524;
+            --text-secondary: #78716C;
+            --border-color: #E7E5E4;
+            --amber-accent: #D97706;
+            --teal-accent: #0D9488;
+            --slate-accent: #475569;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         html { scroll-behavior: smooth; }
@@ -29,13 +27,11 @@
             background: var(--background-main);
             color: var(--text-primary);
             overflow: hidden;
-            /* cursor: none; removed */
         }
 
         h1, h2, h3, h4, .font-slab { font-family: 'Roboto Slab', serif; }
         
-        /* Custom Cursor Removed */
-        
+        /* Main Layout */
         .main-container {
             height: 100vh;
             display: flex;
@@ -43,7 +39,6 @@
             overflow-y: hidden;
             scroll-snap-type: x mandatory;
         }
-        
         .era-section {
             width: 100vw;
             min-width: 100vw;
@@ -56,23 +51,17 @@
             padding: 4rem 2rem;
             overflow: hidden;
         }
-        
-        /* Removed dark mode overlay */
-        
         .era-content {
             position: relative;
-            z-index: 2;
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
             text-align: center;
         }
-
         .section-title {
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--text-primary);
         }
         .section-subtitle {
             font-size: clamp(1rem, 2vw, 1.25rem);
@@ -81,7 +70,22 @@
             margin: 0 auto 3rem auto;
         }
 
-        /* Argument Matrix Styles */
+        /* --- NEW ANIMATION STYLES --- */
+        .animatable {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animatable.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-1 { transition-delay: 200ms; }
+        .delay-2 { transition-delay: 400ms; }
+        .delay-3 { transition-delay: 600ms; }
+        .delay-4 { transition-delay: 800ms; }
+
+        /* Argument Matrix */
         .argument-matrix {
             display: grid;
             grid-template-columns: 1fr 2fr 2fr 2fr;
@@ -94,106 +98,72 @@
             margin: 2rem auto 0 auto;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .matrix-cell {
-            background-color: var(--background-card);
-            padding: 1rem;
-            font-size: 0.9rem;
-        }
-        .matrix-header-row {
-            background-color: #F5F5F4;
-            font-weight: 700;
-        }
-        .matrix-header-col {
-            background-color: #F5F5F4;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .matrix-cell strong {
-            color: var(--text-primary);
-            font-weight: 700;
-        }
+        .matrix-cell { background-color: var(--background-card); padding: 1rem; font-size: 0.9rem; }
+        .matrix-header-row, .matrix-header-col { background-color: #F5F5F4; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .matrix-cell strong { font-weight: 700; }
 
-        /* Three-Column Layout for Eras */
-        .eras-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            width: 100%;
-        }
-        .era-column {
-            background-color: var(--background-card);
-            padding: 2rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            text-align: left;
-        }
-        .era-column h3 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid; }
+        /* Eras Layout */
+        .eras-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; width: 100%; }
+        .era-column { background-color: var(--background-card); padding: 2rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left; }
+        .era-column h3 { font-size: 1.75rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid; }
         .era-column-slavery h3 { color: var(--amber-accent); border-color: var(--amber-accent); }
         .era-column-sharecropping h3 { color: var(--teal-accent); border-color: var(--teal-accent); }
         .era-column-incarceration h3 { color: var(--slate-accent); border-color: var(--slate-accent); }
-        .era-column h4 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 1.5rem 0 0.5rem 0; }
+        .era-column h4 { font-size: 1.1rem; color: var(--text-primary); margin: 1.5rem 0 0.5rem 0; }
         .era-column p { color: var(--text-secondary); line-height: 1.6; }
-        .era-column blockquote {
-            margin: 1rem 0;
-            padding: 1rem;
-            border-left: 4px solid;
-            background-color: #F5F5F4;
-            border-radius: 0 4px 4px 0;
-        }
+        .era-column blockquote { margin: 1rem 0; padding: 1rem; border-left: 4px solid; background-color: #F5F5F4; border-radius: 0 4px 4px 0; }
         .era-column-slavery blockquote { border-color: var(--amber-accent); }
         .era-column-sharecropping blockquote { border-color: var(--teal-accent); }
         .era-column-incarceration blockquote { border-color: var(--slate-accent); }
         
-        /* Data & Case Study Styles */
-        .charts-container, .conclusion-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            width: 100%;
-        }
-        .chart-card, .conclusion-card {
-             background-color: var(--background-card);
-             padding: 1.5rem;
-             border-radius: 8px;
-             border: 1px solid var(--border-color);
-             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+        /* Data & Case Study */
+        .charts-container, .conclusion-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; width: 100%; }
+        .chart-card, .conclusion-card { position: relative; background-color: var(--background-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .chart-container { position: relative; width: 100%; height: 250px; }
-        .chart-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
-
-        .case-study-container {
-            background-color: var(--background-card);
-            padding: 2.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .chart-card > p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        .case-study-container { background-color: var(--background-card); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 1200px; margin: 0 auto; }
         .case-study-flow { display: flex; flex-direction: column; md:flex-direction: row; align-items: center; justify-content: space-around; gap: 1rem; }
         .case-study-flow h4 { color: var(--text-primary); font-size: 1.25rem; }
-        .case-study-flow .arrow { font-size: 2.5rem; color: var(--border-color); transform: rotate(90deg); md:transform: rotate(0); }
+        .case-study-flow .arrow { font-size: 2.5rem; color: var(--border-color); }
+
+        /* --- NEW ANNOTATION STYLES --- */
+        .chart-annotation {
+            position: absolute;
+            background: var(--text-primary);
+            color: var(--background-card);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            max-width: 150px;
+            text-align: center;
+            line-height: 1.4;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            pointer-events: none;
+        }
+        .chart-annotation::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        .annotation-right::after {
+            top: 50%;
+            left: -10px;
+            margin-top: -5px;
+            border-width: 5px 10px 5px 0;
+            border-color: transparent var(--text-primary) transparent transparent;
+        }
 
         /* Navigation */
-        .nav-container {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100;
-            display: flex; gap: 15px; background: rgba(255, 255, 255, 0.7);
-            padding: 10px 15px; border-radius: 20px; backdrop-filter: blur(5px);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+        .nav-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 15px; background: rgba(255, 255, 255, 0.7); padding: 10px 15px; border-radius: 20px; backdrop-filter: blur(5px); border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text-secondary); cursor: pointer; transition: all 0.3s ease; }
         .nav-dot.active { background: var(--amber-accent); transform: scale(1.5); }
         
-        /* Scrollbar Styling */
+        /* Scrollbar */
         .main-container::-webkit-scrollbar { height: 8px; }
         .main-container::-webkit-scrollbar-track { background: var(--border-color); }
         .main-container::-webkit-scrollbar-thumb { background: var(--text-secondary); border-radius: 4px; }
-        .main-container::-webkit-scrollbar-thumb:hover { background: var(--text-primary); }
-
     </style>
 </head>
 <body>
@@ -208,9 +178,9 @@
         
         <section class="era-section">
             <div class="era-content">
-                <h1 class="section-title font-slab">Sermons of Submission</h1>
-                <p class="section-subtitle">Slavery wasn't abolished. It was privatized, criminalized, and constitutionalized.</p>
-                <div class="argument-matrix">
+                <h1 class="section-title font-slab animatable">Sermons of Submission</h1>
+                <p class="section-subtitle animatable delay-1">Slavery wasn't abolished. It was privatized, criminalized, and constitutionalized.</p>
+                <div class="argument-matrix animatable delay-2">
                     <div class="matrix-cell"></div>
                     <div class="matrix-cell matrix-header-row">Era 1: Chattel Slavery</div>
                     <div class="matrix-cell matrix-header-row">Era 2: Sharecropping</div>
@@ -220,9 +190,9 @@
                     <div class="matrix-cell"><strong>Luke 3:14</strong><br>"Be content with your wages."</div>
                     <div class="matrix-cell"><strong>Romans 13:1</strong><br>"Be subject to governing authorities."</div>
                     <div class="matrix-cell matrix-header-col">Economic Reality</div>
-                    <div class="matrix-cell">Labor as <strong>Property</strong> (Chattel)</div>
-                    <div class="matrix-cell">Labor Controlled by <strong>Debt</strong> (Peonage)</div>
-                    <div class="matrix-cell">Labor as <strong>Punishment</strong> (Carceral)</div>
+                    <div class="matrix-cell">Labor as <strong>Property</strong></div>
+                    <div class="matrix-cell">Labor Controlled by <strong>Debt</strong></div>
+                    <div class="matrix-cell">Labor as <strong>Punishment</strong></div>
                     <div class="matrix-cell matrix-header-col">Legal Framework</div>
                     <div class="matrix-cell">Slave Codes</div>
                     <div class="matrix-cell">Black Codes & Crop-Lien Laws</div>
@@ -233,32 +203,23 @@
 
         <section class="era-section">
             <div class="era-content">
-                <h2 class="section-title">The Three Eras of Submission</h2>
-                <p class="section-subtitle">The system of control evolved, but the goal remained the same: extract low-cost labor from a subjugated population. Each era developed a unique blend of religious justification and legal coercion.</p>
+                <h2 class="section-title animatable">The Three Eras of Submission</h2>
+                <p class="section-subtitle animatable delay-1">The system of control evolved, but the goal remained the same. Each era developed a unique blend of religious justification and legal coercion.</p>
                 <div class="eras-container">
-                    <div class="era-column era-column-slavery">
+                    <div class="era-column era-column-slavery animatable delay-2">
                         <h3>Slavery (c. 1850s)</h3>
-                        <h4>The Sermon: A "Positive Good"</h4>
-                        <p>Pulpits argued slavery was divinely ordained, portraying masters as benevolent stewards.</p>
-                        <blockquote>"Slaves, obey your earthly masters with fear and trembling..." <cite>- Eph. 6:5</cite></blockquote>
-                        <h4>The Reality: Labor as Property</h4>
-                        <p>Humans were legally defined as chattel. Slave codes enforced this system, generating immense wealth through forced labor.</p>
+                        <h4>The Sermon: A "Positive Good"</h4><p>Pulpits argued slavery was divinely ordained, portraying masters as benevolent stewards.</p><blockquote>"Slaves, obey your earthly masters..." <cite>- Eph. 6:5</cite></blockquote>
+                        <h4>The Reality: Labor as Property</h4><p>Humans were legally defined as chattel. Slave codes enforced this system, generating immense wealth.</p>
                     </div>
-                    <div class="era-column era-column-sharecropping">
+                    <div class="era-column era-column-sharecropping animatable delay-3">
                         <h3>Sharecropping (c. 1880s)</h3>
-                        <h4>The Sermon: Contentment</h4>
-                        <p>The "Lost Cause" civil religion framed poverty as a spiritual trial and emphasized the sanctity of contracts.</p>
-                        <blockquote>"Be content with your wages." <cite>- Luke 3:14</cite></blockquote>
-                        <h4>The Reality: Labor Controlled by Debt</h4>
-                        <p>Slavery was privatized into debt peonage, enforced by Black Codes and exploitative crop-lien laws.</p>
+                        <h4>The Sermon: Contentment</h4><p>The "Lost Cause" civil religion framed poverty as a trial and emphasized the sanctity of contracts.</p><blockquote>"Be content with your wages." <cite>- Luke 3:14</cite></blockquote>
+                        <h4>The Reality: Labor Controlled by Debt</h4><p>Slavery was privatized into debt peonage, enforced by Black Codes and exploitative crop-lien laws.</p>
                     </div>
-                    <div class="era-column era-column-incarceration">
+                    <div class="era-column era-column-incarceration animatable delay-4">
                         <h3>Incarceration (c. 1990s)</h3>
-                        <h4>The Sermon: Obey the State</h4>
-                        <p>The "tough on crime" movement framed crime as individual moral failure demanding a punitive response.</p>
-                        <blockquote>"Be subject to the governing authorities." <cite>- Romans 13:1</cite></blockquote>
-                        <h4>The Reality: Labor as Punishment</h4>
-                        <p>The 13th Amendment's loophole was used to create a vast, cheap labor pool via mass incarceration.</p>
+                        <h4>The Sermon: Obey the State</h4><p>The "tough on crime" movement framed crime as individual moral failure demanding punishment.</p><blockquote>"Be subject to the governing authorities." <cite>- Romans 13:1</cite></blockquote>
+                        <h4>The Reality: Labor as Punishment</h4><p>The 13th Amendment's loophole was used to create a vast, cheap labor pool via mass incarceration.</p>
                     </div>
                 </div>
             </div>
@@ -266,26 +227,26 @@
 
         <section class="era-section">
             <div class="era-content">
-                <h2 class="section-title">The Data of Disparity</h2>
-                <p class="section-subtitle">At every stage, these systems were designed to disproportionately target and control Black labor. The data reveals the foundational economics and the resulting racialized disparities.</p>
+                <h2 class="section-title animatable">The Data of Disparity</h2>
+                <p class="section-subtitle animatable delay-1">At every stage, these systems were designed to disproportionately target and control Black labor.</p>
                 <div class="charts-container">
-                    <div class="chart-card">
+                    <div class="chart-card animatable delay-2">
                         <h4 class="font-slab" style="color:var(--amber-accent)">Slavery: The Nation's Primary Asset</h4>
-                        <p>In 1860, the financial value of enslaved people was the single largest asset in the US, worth more than all manufacturing and railroads combined.</p>
+                        <p>In 1860, the financial value of enslaved people was the single largest asset in the US, worth more than all industry and railroads combined.</p>
                         <div class="chart-container"><canvas id="slaveryChart"></canvas></div>
-                        <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: "Slavery's Capitalism", Beckert & Rockman</p>
+                        <div class="chart-annotation animatable delay-4 annotation-right" style="top: 20%; left: 45%;"><strong>$3.7 Billion</strong> in stolen human capital</div>
                     </div>
-                    <div class="chart-card">
+                    <div class="chart-card animatable delay-3">
                         <h4 class="font-slab" style="color:var(--teal-accent)">Sharecropping: A Racial Trap</h4>
-                        <p>By 1900 in Mississippi, the sharecropping system had trapped a far higher percentage of the Black farming population than the white.</p>
+                        <p>By 1900 in Mississippi, the system trapped a far higher percentage of the Black farming population than the white.</p>
                         <div class="chart-container"><canvas id="sharecroppingChart"></canvas></div>
-                         <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: U.S. Census Data, 1900</p>
+                        <div class="chart-annotation animatable delay-4 annotation-right" style="top: 15%; left: 82%;"><strong>85%</strong> of Black farmers were trapped in tenancy</div>
                     </div>
-                    <div class="chart-card">
+                    <div class="chart-card animatable delay-4">
                         <h4 class="font-slab" style="color:var(--slate-accent)">Incarceration: A Stark Disparity</h4>
-                        <p>In North Carolina today (2022), Black people are dramatically overrepresented in prisons compared to their share of the general population.</p>
+                        <p>In North Carolina today (2022), Black people are dramatically overrepresented in prisons.</p>
                         <div class="chart-container"><canvas id="incarcerationChart"></canvas></div>
-                         <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: N.C. Dept. of Adult Correction, 2022</p>
+                        <div class="chart-annotation animatable delay-4 annotation-right" style="top: 35%; left: 30%;">Over <strong>2x</strong> their share of the population</div>
                     </div>
                 </div>
             </div>
@@ -293,23 +254,20 @@
 
         <section class="era-section">
             <div class="era-content">
-                <h2 class="section-title">Case Study: Durham, North Carolina</h2>
-                <p class="section-subtitle">The evolution from plantation to prison is a lived reality. The history of Durham reveals the unbroken chain connecting these systems on the very same land.</p>
-                <div class="case-study-container">
+                <h2 class="section-title animatable">Case Study: Durham, North Carolina</h2>
+                <p class="section-subtitle animatable delay-1">The evolution from plantation to prison is a lived reality, grounded in the history of specific places.</p>
+                <div class="case-study-container animatable delay-2">
                     <div class="case-study-flow">
-                        <div class="text-center">
-                            <h4>THEN: Stagville Plantation</h4>
-                            <p class="text-sm text-secondary mt-2">Wealth built on the forced labor of over 900 enslaved people.</p>
+                        <div class="text-center animatable delay-2">
+                            <h4>THEN: Stagville Plantation</h4><p class="text-sm text-secondary mt-2">Wealth built on the forced labor of over 900 enslaved people.</p>
                         </div>
-                        <div class="arrow">&rarr;</div>
-                        <div class="text-center">
-                            <h4>LATER: Debt Peonage</h4>
-                            <p class="text-sm text-secondary mt-2">Freedmen became sharecroppers on the same land, trapped by debt.</p>
+                        <div class="arrow animatable delay-3">&rarr;</div>
+                        <div class="text-center animatable delay-3">
+                            <h4>LATER: Debt Peonage</h4><p class="text-sm text-secondary mt-2">Freedmen became sharecroppers on the same land, trapped by debt.</p>
                         </div>
-                        <div class="arrow">&rarr;</div>
-                        <div class="text-center">
-                            <h4>NOW: Correction Enterprises</h4>
-                            <p class="text-sm text-secondary mt-2">NC's prison labor system, disproportionately Black, works state land for pennies an hour.</p>
+                        <div class="arrow animatable delay-4">&rarr;</div>
+                        <div class="text-center animatable delay-4">
+                            <h4>NOW: Correction Enterprises</h4><p class="text-sm text-secondary mt-2">NC's prison labor system works state land for pennies an hour.</p>
                         </div>
                     </div>
                 </div>
@@ -318,15 +276,15 @@
         
         <section class="era-section">
             <div class="era-content">
-                <h2 class="section-title">Resistance & A Call for Reckoning</h2>
-                <p class="section-subtitle">The sermons of submission never went unchallenged. This history demands critical thought and action today.</p>
+                <h2 class="section-title animatable">Resistance & A Call for Reckoning</h2>
+                <p class="section-subtitle animatable delay-1">The sermons of submission never went unchallenged. This history demands critical thought and action today.</p>
                 <div class="conclusion-container">
-                    <div class="conclusion-card">
+                    <div class="conclusion-card animatable delay-2">
                         <h3 class="font-slab text-xl text-primary mb-4">The Counter-Pulpit</h3>
-                        <p class="mb-4 text-secondary">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story—God liberating the oppressed—to fight for freedom.</p>
+                        <p class="mb-4 text-secondary">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story to fight for freedom.</p>
                         <blockquote class="border-l-4 p-4" style="border-color: var(--amber-accent)">"There is neither Jew nor Gentile, neither slave nor free... for you are all one in Christ Jesus." <cite class="text-sm block text-right">- Galatians 3:28</cite></blockquote>
                     </div>
-                    <div class="conclusion-card">
+                    <div class="conclusion-card animatable delay-3">
                         <h3 class="font-slab text-xl text-primary mb-4">Action & Discussion</h3>
                         <h4 class="font-bold text-sm uppercase tracking-wide">Discussion Questions</h4>
                         <ul class="list-disc list-inside my-2 text-secondary text-sm">
@@ -337,7 +295,6 @@
                         <ul class="list-disc list-inside my-2 text-secondary text-sm">
                              <li>Support criminal justice reform initiatives.</li>
                              <li>Engage with local racial and economic justice organizations.</li>
-                             <li>Promote voter education on prison labor and sentencing reform.</li>
                         </ul>
                     </div>
                 </div>
@@ -348,6 +305,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Navigation
             const container = document.querySelector('.main-container');
             const navDots = document.querySelectorAll('.nav-dot');
             navDots.forEach((dot, index) => {
@@ -358,34 +316,33 @@
                 navDots.forEach((dot, index) => dot.classList.toggle('active', index === sectionIndex));
             });
 
-            // CHART DEFAULTS
+            // Animation on Scroll
+            const animationObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const animatables = entry.target.querySelectorAll('.animatable');
+                        animatables.forEach(el => el.classList.add('is-visible'));
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.era-section').forEach(section => {
+                animationObserver.observe(section);
+            });
+
+            // Chart Config
             Chart.defaults.color = 'var(--text-secondary)';
             Chart.defaults.borderColor = 'var(--border-color)';
             Chart.defaults.font.family = "'Inter', sans-serif";
 
-            // Slavery Chart
+            // Chart Initialization (rest of the chart code is the same)
             const slaveryCtx = document.getElementById('slaveryChart').getContext('2d');
-            new Chart(slaveryCtx, {
-                type: 'bar',
-                data: { labels: ['Value of Enslaved People', 'All US Manufacturing & Railroads'], datasets: [{ label: 'Value in 1860 ($ Billions)', data: [3.7, 3.0], backgroundColor: ['rgba(217, 119, 6, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(217, 119, 6, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: (value) => '$' + value + 'B' } } } }
-            });
-
-            // Sharecropping Chart
+            new Chart(slaveryCtx, { type: 'bar', data: { labels: ['Value of Enslaved People', 'All US Manufacturing & Railroads'], datasets: [{ label: 'Value in 1860 ($ Billions)', data: [3.7, 3.0], backgroundColor: ['rgba(217, 119, 6, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(217, 119, 6, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: (value) => '$' + value + 'B' } } } } });
             const sharecroppingCtx = document.getElementById('sharecroppingChart').getContext('2d');
-            new Chart(sharecroppingCtx, {
-                type: 'bar',
-                data: { labels: ['Black Farmers', 'White Farmers'], datasets: [{ label: '% as Tenants/Sharecroppers', data: [85, 36], backgroundColor: ['rgba(13, 148, 136, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(13, 148, 136, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] },
-                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { max: 100, ticks: { callback: (value) => value + '%' } } } }
-            });
-
-            // Incarceration Chart
+            new Chart(sharecroppingCtx, { type: 'bar', data: { labels: ['Black Farmers', 'White Farmers'], datasets: [{ label: '% as Tenants/Sharecroppers', data: [85, 36], backgroundColor: ['rgba(13, 148, 136, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(13, 148, 136, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { max: 100, ticks: { callback: (value) => value + '%' } } } } });
             const incarcerationCtx = document.getElementById('incarcerationChart').getContext('2d');
-            new Chart(incarcerationCtx, {
-                type: 'bar',
-                data: { labels: ['Black Population', 'White Population'], datasets: [ { label: 'General State %', data: [22.2, 67.8], backgroundColor: 'rgba(120, 113, 108, 0.5)', borderColor: 'rgba(120, 113, 108, 1)', borderWidth: 1 }, { label: 'Prison Population %', data: [50, 41], backgroundColor: 'rgba(71, 85, 105, 0.7)', borderColor: 'rgba(71, 85, 105, 1)', borderWidth: 1 } ] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }, scales: { y: { max: 100, ticks: { callback: (value) => value + '%' } } } }
-            });
+            new Chart(incarcerationCtx, { type: 'bar', data: { labels: ['Black Population', 'White Population'], datasets: [ { label: 'General State %', data: [22.2, 67.8], backgroundColor: 'rgba(120, 113, 108, 0.5)', borderColor: 'rgba(120, 113, 108, 1)', borderWidth: 1 }, { label: 'Prison Population %', data: [50, 41], backgroundColor: 'rgba(71, 85, 105, 0.7)', borderColor: 'rgba(71, 85, 105, 1)', borderWidth: 1 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }, scales: { y: { max: 100, ticks: { callback: (value) => value + '%' } } } } });
         });
     </script>
 </body>
