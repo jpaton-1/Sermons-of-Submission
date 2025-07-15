@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sermons of Submission: Merged Experience</title>
+    <title>Sermons of Submission: Scholarly Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --background-dark: #0F172A;
-            --background-light: #1E293B;
-            --text-primary: #E2E8F0;
-            --text-secondary: #94A3B8;
-            --accent-primary: #2DD4BF;
-            --accent-secondary: #5EEAD4;
-            --amber-accent: #f59e0b; /* Amber 500 */
-            --teal-accent: #14b8a6;  /* Teal 500 */
-            --slate-accent: #475569; /* Slate 600 */
+            --background-main: #F5F5F4;  /* Stone 100 */
+            --background-card: #FFFFFF;
+            --text-primary: #292524;    /* Stone 800 */
+            --text-secondary: #78716C;  /* Stone 500 */
+            --border-color: #E7E5E4;    /* Stone 200 */
+            --accent-primary: #2DD4BF;  /* Teal accent from before */
+            --amber-accent: #D97706;    /* Amber 600 */
+            --teal-accent: #0D9488;     /* Teal 600 */
+            --slate-accent: #475569;    /* Slate 600 */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,26 +26,15 @@
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--background-dark);
+            background: var(--background-main);
             color: var(--text-primary);
-            overflow: hidden; /* Changed from overflow-x: hidden */
-            cursor: none;
+            overflow: hidden;
+            /* cursor: none; removed */
         }
 
         h1, h2, h3, h4, .font-slab { font-family: 'Roboto Slab', serif; }
         
-        .cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: var(--accent-primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            transition: transform 0.1s ease;
-        }
-        
-        .cursor.hover { transform: scale(2); }
+        /* Custom Cursor Removed */
         
         .main-container {
             height: 100vh;
@@ -68,13 +57,7 @@
             overflow: hidden;
         }
         
-        .era-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 1) 90%);
-            z-index: 1;
-        }
+        /* Removed dark mode overlay */
         
         .era-content {
             position: relative;
@@ -89,7 +72,7 @@
             font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--accent-secondary);
+            color: var(--text-primary);
         }
         .section-subtitle {
             font-size: clamp(1rem, 2vw, 1.25rem);
@@ -103,34 +86,33 @@
             display: grid;
             grid-template-columns: 1fr 2fr 2fr 2fr;
             gap: 2px;
-            background-color: var(--background-light);
+            background-color: var(--border-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
             max-width: 1000px;
             margin: 2rem auto 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .matrix-cell {
-            background-color: var(--background-dark);
+            background-color: var(--background-card);
             padding: 1rem;
             font-size: 0.9rem;
         }
         .matrix-header-row {
-            background-color: var(--background-light);
+            background-color: #F5F5F4;
             font-weight: 700;
-            color: var(--text-primary);
         }
         .matrix-header-col {
-            background-color: var(--background-light);
+            background-color: #F5F5F4;
             font-weight: 700;
-            color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .matrix-cell strong {
-            color: var(--accent-secondary);
-            font-weight: 400;
+            color: var(--text-primary);
+            font-weight: 700;
         }
 
         /* Three-Column Layout for Eras */
@@ -141,23 +123,24 @@
             width: 100%;
         }
         .era-column {
-            background-color: rgba(30, 41, 59, 0.5);
+            background-color: var(--background-card);
             padding: 2rem;
             border-radius: 8px;
-            border: 1px solid var(--background-light);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             text-align: left;
         }
         .era-column h3 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid; }
         .era-column-slavery h3 { color: var(--amber-accent); border-color: var(--amber-accent); }
         .era-column-sharecropping h3 { color: var(--teal-accent); border-color: var(--teal-accent); }
         .era-column-incarceration h3 { color: var(--slate-accent); border-color: var(--slate-accent); }
-        .era-column h4 { font-size: 1.1rem; font-weight: 700; color: var(--accent-secondary); margin: 1.5rem 0 0.5rem 0; }
+        .era-column h4 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 1.5rem 0 0.5rem 0; }
         .era-column p { color: var(--text-secondary); line-height: 1.6; }
         .era-column blockquote {
             margin: 1rem 0;
             padding: 1rem;
             border-left: 4px solid;
-            background-color: rgba(15, 23, 42, 0.5);
+            background-color: #F5F5F4;
             border-radius: 0 4px 4px 0;
         }
         .era-column-slavery blockquote { border-color: var(--amber-accent); }
@@ -171,46 +154,49 @@
             gap: 2rem;
             width: 100%;
         }
-        .chart-card {
-             background-color: rgba(30, 41, 59, 0.5);
+        .chart-card, .conclusion-card {
+             background-color: var(--background-card);
              padding: 1.5rem;
              border-radius: 8px;
-             border: 1px solid var(--background-light);
+             border: 1px solid var(--border-color);
+             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .chart-container { position: relative; width: 100%; height: 250px; }
         .chart-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
 
         .case-study-container {
-            background-color: rgba(30, 41, 59, 0.5);
+            background-color: var(--background-card);
             padding: 2.5rem;
             border-radius: 8px;
-            border: 1px solid var(--background-light);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             max-width: 1200px;
             margin: 0 auto;
         }
         .case-study-flow { display: flex; flex-direction: column; md:flex-direction: row; align-items: center; justify-content: space-around; gap: 1rem; }
-        .case-study-flow h4 { color: var(--accent-secondary); font-size: 1.25rem; }
-        .case-study-flow .arrow { font-size: 2.5rem; color: var(--slate-accent); transform: rotate(90deg); md:transform: rotate(0); }
+        .case-study-flow h4 { color: var(--text-primary); font-size: 1.25rem; }
+        .case-study-flow .arrow { font-size: 2.5rem; color: var(--border-color); transform: rotate(90deg); md:transform: rotate(0); }
 
         /* Navigation */
         .nav-container {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100;
-            display: flex; gap: 15px; background: rgba(30, 41, 59, 0.5);
+            display: flex; gap: 15px; background: rgba(255, 255, 255, 0.7);
             padding: 10px 15px; border-radius: 20px; backdrop-filter: blur(5px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.3); cursor: pointer; transition: all 0.3s ease; }
-        .nav-dot.active { background: var(--accent-primary); transform: scale(1.5); }
+        .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text-secondary); cursor: pointer; transition: all 0.3s ease; }
+        .nav-dot.active { background: var(--amber-accent); transform: scale(1.5); }
         
         /* Scrollbar Styling */
         .main-container::-webkit-scrollbar { height: 8px; }
-        .main-container::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); }
-        .main-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
-        .main-container::-webkit-scrollbar-thumb:hover { background: var(--accent-secondary); }
+        .main-container::-webkit-scrollbar-track { background: var(--border-color); }
+        .main-container::-webkit-scrollbar-thumb { background: var(--text-secondary); border-radius: 4px; }
+        .main-container::-webkit-scrollbar-thumb:hover { background: var(--text-primary); }
 
     </style>
 </head>
 <body>
-    <div class="cursor"></div>
     <div class="nav-container">
         <div class="nav-dot active" data-section="0"></div>
         <div class="nav-dot" data-section="1"></div>
@@ -299,7 +285,7 @@
                         <h4 class="font-slab" style="color:var(--slate-accent)">Incarceration: A Stark Disparity</h4>
                         <p>In North Carolina today (2022), Black people are dramatically overrepresented in prisons compared to their share of the general population.</p>
                         <div class="chart-container"><canvas id="incarcerationChart"></canvas></div>
-                         <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: N.C. Dept. of Public Safety, 2022</p>
+                         <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: N.C. Dept. of Adult Correction, 2022</p>
                     </div>
                 </div>
             </div>
@@ -335,13 +321,13 @@
                 <h2 class="section-title">Resistance & A Call for Reckoning</h2>
                 <p class="section-subtitle">The sermons of submission never went unchallenged. This history demands critical thought and action today.</p>
                 <div class="conclusion-container">
-                    <div class="chart-card">
-                        <h3 class="font-slab text-xl text-accent-secondary mb-4">The Counter-Pulpit</h3>
-                        <p class="mb-4">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story—God liberating the oppressed—to fight for freedom.</p>
-                        <blockquote class="border-l-4 p-4" style="border-color: var(--accent-secondary)">"There is neither Jew nor Gentile, neither slave nor free... for you are all one in Christ Jesus." <cite class="text-sm block text-right">- Galatians 3:28</cite></blockquote>
+                    <div class="conclusion-card">
+                        <h3 class="font-slab text-xl text-primary mb-4">The Counter-Pulpit</h3>
+                        <p class="mb-4 text-secondary">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story—God liberating the oppressed—to fight for freedom.</p>
+                        <blockquote class="border-l-4 p-4" style="border-color: var(--amber-accent)">"There is neither Jew nor Gentile, neither slave nor free... for you are all one in Christ Jesus." <cite class="text-sm block text-right">- Galatians 3:28</cite></blockquote>
                     </div>
-                    <div class="chart-card">
-                        <h3 class="font-slab text-xl text-accent-secondary mb-4">Action & Discussion</h3>
+                    <div class="conclusion-card">
+                        <h3 class="font-slab text-xl text-primary mb-4">Action & Discussion</h3>
                         <h4 class="font-bold text-sm uppercase tracking-wide">Discussion Questions</h4>
                         <ul class="list-disc list-inside my-2 text-secondary text-sm">
                             <li>How are scriptural interpretations used to justify political or economic systems today?</li>
@@ -362,16 +348,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const cursor = document.querySelector('.cursor');
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-            document.querySelectorAll('a, button').forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-            });
-
             const container = document.querySelector('.main-container');
             const navDots = document.querySelectorAll('.nav-dot');
             navDots.forEach((dot, index) => {
@@ -383,14 +359,15 @@
             });
 
             // CHART DEFAULTS
-            Chart.defaults.color = 'rgba(148, 163, 184, 1)';
-            Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.2)';
+            Chart.defaults.color = 'var(--text-secondary)';
+            Chart.defaults.borderColor = 'var(--border-color)';
+            Chart.defaults.font.family = "'Inter', sans-serif";
 
             // Slavery Chart
             const slaveryCtx = document.getElementById('slaveryChart').getContext('2d');
             new Chart(slaveryCtx, {
                 type: 'bar',
-                data: { labels: ['Value of Enslaved People', 'All US Manufacturing & Railroads'], datasets: [{ label: 'Value in 1860 ($ Billions)', data: [3.7, 3.0], backgroundColor: ['rgba(245, 158, 11, 0.6)', 'rgba(100, 116, 139, 0.6)'], borderColor: ['rgba(245, 158, 11, 1)', 'rgba(100, 116, 139, 1)'], borderWidth: 1 }] },
+                data: { labels: ['Value of Enslaved People', 'All US Manufacturing & Railroads'], datasets: [{ label: 'Value in 1860 ($ Billions)', data: [3.7, 3.0], backgroundColor: ['rgba(217, 119, 6, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(217, 119, 6, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: (value) => '$' + value + 'B' } } } }
             });
 
@@ -398,7 +375,7 @@
             const sharecroppingCtx = document.getElementById('sharecroppingChart').getContext('2d');
             new Chart(sharecroppingCtx, {
                 type: 'bar',
-                data: { labels: ['Black Farmers', 'White Farmers'], datasets: [{ label: '% as Tenants/Sharecroppers', data: [85, 36], backgroundColor: ['rgba(20, 184, 166, 0.6)', 'rgba(100, 116, 139, 0.6)'], borderColor: ['rgba(20, 184, 166, 1)', 'rgba(100, 116, 139, 1)'], borderWidth: 1 }] },
+                data: { labels: ['Black Farmers', 'White Farmers'], datasets: [{ label: '% as Tenants/Sharecroppers', data: [85, 36], backgroundColor: ['rgba(13, 148, 136, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(13, 148, 136, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] },
                 options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { max: 100, ticks: { callback: (value) => value + '%' } } } }
             });
 
@@ -406,7 +383,7 @@
             const incarcerationCtx = document.getElementById('incarcerationChart').getContext('2d');
             new Chart(incarcerationCtx, {
                 type: 'bar',
-                data: { labels: ['Black Population', 'White Population'], datasets: [ { label: 'General State %', data: [22.2, 67.8], backgroundColor: 'rgba(100, 116, 139, 0.6)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 1 }, { label: 'Prison Population %', data: [50, 41], backgroundColor: 'rgba(51, 65, 85, 0.7)', borderColor: 'rgba(30, 41, 59, 1)', borderWidth: 1 } ] },
+                data: { labels: ['Black Population', 'White Population'], datasets: [ { label: 'General State %', data: [22.2, 67.8], backgroundColor: 'rgba(120, 113, 108, 0.5)', borderColor: 'rgba(120, 113, 108, 1)', borderWidth: 1 }, { label: 'Prison Population %', data: [50, 41], backgroundColor: 'rgba(71, 85, 105, 0.7)', borderColor: 'rgba(71, 85, 105, 1)', borderWidth: 1 } ] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }, scales: { y: { max: 100, ticks: { callback: (value) => value + '%' } } } }
             });
         });
