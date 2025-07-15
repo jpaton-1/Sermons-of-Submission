@@ -1,402 +1,415 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sermons of Submission: Three Centuries, Same Scripture</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Sermons of Submission: Merged Experience</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Roboto', sans-serif; }
+        :root {
+            --background-dark: #0F172A;
+            --background-light: #1E293B;
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --accent-primary: #2DD4BF;
+            --accent-secondary: #5EEAD4;
+            --amber-accent: #f59e0b; /* Amber 500 */
+            --teal-accent: #14b8a6;  /* Teal 500 */
+            --slate-accent: #475569; /* Slate 600 */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-dark);
+            color: var(--text-primary);
+            overflow: hidden; /* Changed from overflow-x: hidden */
+            cursor: none;
+        }
+
         h1, h2, h3, h4, .font-slab { font-family: 'Roboto Slab', serif; }
-        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        @media (max-width: 768px) { .chart-container { height: 300px; max-height: 350px; } }
-        .active-nav { color: #CA8A04; border-bottom-color: #CA8A04; }
-        .inactive-nav { color: #57534E; border-bottom-color: transparent; }
+        
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10001;
+            transition: transform 0.1s ease;
+        }
+        
+        .cursor.hover { transform: scale(2); }
+        
+        .main-container {
+            height: 100vh;
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .era-section {
+            width: 100vw;
+            min-width: 100vw;
+            height: 100vh;
+            position: relative;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            overflow: hidden;
+        }
+        
+        .era-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 1) 90%);
+            z-index: 1;
+        }
+        
+        .era-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-secondary);
+        }
+        .section-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+        }
+
+        /* Argument Matrix Styles */
+        .argument-matrix {
+            display: grid;
+            grid-template-columns: 1fr 2fr 2fr 2fr;
+            gap: 2px;
+            background-color: var(--background-light);
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 1000px;
+            margin: 2rem auto 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .matrix-cell {
+            background-color: var(--background-dark);
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+        .matrix-header-row {
+            background-color: var(--background-light);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .matrix-header-col {
+            background-color: var(--background-light);
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .matrix-cell strong {
+            color: var(--accent-secondary);
+            font-weight: 400;
+        }
+
+        /* Three-Column Layout for Eras */
+        .eras-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+        .era-column {
+            background-color: rgba(30, 41, 59, 0.5);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--background-light);
+            text-align: left;
+        }
+        .era-column h3 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid; }
+        .era-column-slavery h3 { color: var(--amber-accent); border-color: var(--amber-accent); }
+        .era-column-sharecropping h3 { color: var(--teal-accent); border-color: var(--teal-accent); }
+        .era-column-incarceration h3 { color: var(--slate-accent); border-color: var(--slate-accent); }
+        .era-column h4 { font-size: 1.1rem; font-weight: 700; color: var(--accent-secondary); margin: 1.5rem 0 0.5rem 0; }
+        .era-column p { color: var(--text-secondary); line-height: 1.6; }
+        .era-column blockquote {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-left: 4px solid;
+            background-color: rgba(15, 23, 42, 0.5);
+            border-radius: 0 4px 4px 0;
+        }
+        .era-column-slavery blockquote { border-color: var(--amber-accent); }
+        .era-column-sharecropping blockquote { border-color: var(--teal-accent); }
+        .era-column-incarceration blockquote { border-color: var(--slate-accent); }
+        
+        /* Data & Case Study Styles */
+        .charts-container, .conclusion-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+        .chart-card {
+             background-color: rgba(30, 41, 59, 0.5);
+             padding: 1.5rem;
+             border-radius: 8px;
+             border: 1px solid var(--background-light);
+        }
+        .chart-container { position: relative; width: 100%; height: 250px; }
+        .chart-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+        .case-study-container {
+            background-color: rgba(30, 41, 59, 0.5);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--background-light);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .case-study-flow { display: flex; flex-direction: column; md:flex-direction: row; align-items: center; justify-content: space-around; gap: 1rem; }
+        .case-study-flow h4 { color: var(--accent-secondary); font-size: 1.25rem; }
+        .case-study-flow .arrow { font-size: 2.5rem; color: var(--slate-accent); transform: rotate(90deg); md:transform: rotate(0); }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100;
+            display: flex; gap: 15px; background: rgba(30, 41, 59, 0.5);
+            padding: 10px 15px; border-radius: 20px; backdrop-filter: blur(5px);
+        }
+        .nav-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.3); cursor: pointer; transition: all 0.3s ease; }
+        .nav-dot.active { background: var(--accent-primary); transform: scale(1.5); }
+        
+        /* Scrollbar Styling */
+        .main-container::-webkit-scrollbar { height: 8px; }
+        .main-container::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); }
+        .main-container::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+        .main-container::-webkit-scrollbar-thumb:hover { background: var(--accent-secondary); }
+
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800 antialiased">
-
-    <header class="bg-stone-100/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0">
-                    <h1 class="text-lg md:text-xl font-bold text-stone-700 font-slab">Sermons of Submission</h1>
+<body>
+    <div class="cursor"></div>
+    <div class="nav-container">
+        <div class="nav-dot active" data-section="0"></div>
+        <div class="nav-dot" data-section="1"></div>
+        <div class="nav-dot" data-section="2"></div>
+        <div class="nav-dot" data-section="3"></div>
+        <div class="nav-dot" data-section="4"></div>
+    </div>
+    <div class="main-container">
+        
+        <section class="era-section">
+            <div class="era-content">
+                <h1 class="section-title font-slab">Sermons of Submission</h1>
+                <p class="section-subtitle">Slavery wasn't abolished. It was privatized, criminalized, and constitutionalized.</p>
+                <div class="argument-matrix">
+                    <div class="matrix-cell"></div>
+                    <div class="matrix-cell matrix-header-row">Era 1: Chattel Slavery</div>
+                    <div class="matrix-cell matrix-header-row">Era 2: Sharecropping</div>
+                    <div class="matrix-cell matrix-header-row">Era 3: Mass Incarceration</div>
+                    <div class="matrix-cell matrix-header-col">Primary Scripture</div>
+                    <div class="matrix-cell"><strong>Ephesians 6:5</strong><br>"Servants, obey your masters..."</div>
+                    <div class="matrix-cell"><strong>Luke 3:14</strong><br>"Be content with your wages."</div>
+                    <div class="matrix-cell"><strong>Romans 13:1</strong><br>"Be subject to governing authorities."</div>
+                    <div class="matrix-cell matrix-header-col">Economic Reality</div>
+                    <div class="matrix-cell">Labor as <strong>Property</strong> (Chattel)</div>
+                    <div class="matrix-cell">Labor Controlled by <strong>Debt</strong> (Peonage)</div>
+                    <div class="matrix-cell">Labor as <strong>Punishment</strong> (Carceral)</div>
+                    <div class="matrix-cell matrix-header-col">Legal Framework</div>
+                    <div class="matrix-cell">Slave Codes</div>
+                    <div class="matrix-cell">Black Codes & Crop-Lien Laws</div>
+                    <div class="matrix-cell">13th Amendment Exception Clause</div>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#introduction" class="nav-link inactive-nav hover:text-yellow-600 px-3 py-2 text-sm font-medium border-b-2 transition-colors duration-300">Introduction</a>
-                        <a href="#eras" class="nav-link inactive-nav hover:text-yellow-600 px-3 py-2 text-sm font-medium border-b-2 transition-colors duration-300">The Three Eras</a>
-                        <a href="#data" class="nav-link inactive-nav hover:text-yellow-600 px-3 py-2 text-sm font-medium border-b-2 transition-colors duration-300">The Data</a>
-                        <a href="#casestudy" class="nav-link inactive-nav hover:text-yellow-600 px-3 py-2 text-sm font-medium border-b-2 transition-colors duration-300">Case Study</a>
-                        <a href="#resistance" class="nav-link inactive-nav hover:text-yellow-600 px-3 py-2 text-sm font-medium border-b-2 transition-colors duration-300">Resistance</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
-        <section id="introduction" class="text-center mb-20">
-            <h1 class="text-4xl md:text-5xl font-bold text-stone-900 font-slab leading-tight">Sermons of Submission</h1>
-            <h2 class="mt-4 text-xl md:text-2xl font-slab text-stone-600">Three Centuries, Same Scripture</h2>
-            <p class="mt-6 max-w-3xl mx-auto text-lg text-stone-700">
-                Slavery wasn't abolished. It was privatized, criminalized, and constitutionalized. This experience reveals how identical biblical passages were weaponized to justify three connected systems of racial control: plantation slavery, sharecropping, and mass incarceration. Explore the shocking continuity of religious manipulation used to maintain economic exploitation across centuries.
-            </p>
-        </section>
-
-        <section id="matrix" class="mb-24 p-6 bg-white rounded-xl shadow-lg">
-            <div class="text-center mb-6">
-                <h3 class="text-2xl font-bold font-slab text-stone-800">The Unbroken Chain of Control</h3>
-                <p class="mt-2 text-stone-600">This is the core argument. Click any box to jump to the detailed analysis of how theology, economics, and law intertwined in each era.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-1 text-center text-sm">
-                <div class="p-4 font-bold bg-stone-100 rounded-tl-lg"></div>
-                <div class="p-4 font-bold bg-stone-200 text-stone-800 rounded-tr-lg md:rounded-none">Era 1: Chattel Slavery</div>
-                <div class="p-4 font-bold bg-stone-200 text-stone-800">Era 2: Sharecropping</div>
-                <div class="p-4 font-bold bg-stone-200 text-stone-800 md:rounded-tr-lg">Era 3: Mass Incarceration</div>
-
-                <div class="p-4 font-bold bg-stone-100 text-stone-800">Primary Scripture</div>
-                <div class="matrix-cell" data-target="slavery-scripture">Ephesians 6:5<br>"Servants, obey your masters..."</div>
-                <div class="matrix-cell" data-target="sharecropping-scripture">Luke 3:14<br>"Be content with your wages."</div>
-                <div class="matrix-cell" data-target="incarceration-scripture">Romans 13:1<br>"Be subject to the governing authorities."</div>
-
-                <div class="p-4 font-bold bg-stone-100 text-stone-800">Economic Reality</div>
-                <div class="matrix-cell" data-target="slavery-reality">Labor as Property (Chattel)</div>
-                <div class="matrix-cell" data-target="sharecropping-reality">Labor Controlled by Debt (Peonage)</div>
-                <div class="matrix-cell" data-target="incarceration-reality">Labor as Punishment (Carceral)</div>
-
-                <div class="p-4 font-bold bg-stone-100 text-stone-800 rounded-bl-lg">Legal Framework</div>
-                <div class="matrix-cell" data-target="slavery-reality">Slave Codes</div>
-                <div class="matrix-cell" data-target="sharecropping-reality">Black Codes & Crop-Lien Laws</div>
-                <div class="matrix-cell rounded-br-lg" data-target="incarceration-reality">13th Amendment Exception Clause</div>
             </div>
         </section>
 
-        <section id="eras">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 font-slab">The Three Eras of Submission</h2>
-                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">
-                    The system of control evolved, but the goal remained the same: extract low-cost labor from a subjugated population. Each era developed a unique blend of religious justification and legal coercion to achieve this end. Below, we explore the distinct "sermon" and the harsh reality of each period.
-                </p>
-            </div>
-
-            <div class="space-y-20">
-                <div id="era-slavery" class="p-8 bg-white rounded-xl shadow-lg">
-                    <h3 class="text-3xl font-bold font-slab text-amber-700 mb-6 border-b-2 border-amber-200 pb-3">Era 1: Chattel Slavery (c. 1850s)</h3>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div id="slavery-scripture">
-                            <h4 class="text-xl font-slab font-bold mb-4">The Sermon: A "Positive Good"</h4>
-                            <p class="mb-4">In the decades before the Civil War, Southern pulpits argued that slavery was not a necessary evil, but a divinely ordained "positive good." This theology portrayed slaveholders as benevolent Christian stewards caring for a supposedly inferior race.</p>
-                            <blockquote class="border-l-4 border-amber-600 bg-amber-50 p-4 rounded-r-lg mb-4">
-                                <p class="font-semibold text-stone-800">"Slaves, obey your earthly masters with fear and trembling, with a sincere heart, as you would Christ."</p>
-                                <cite class="block text-right mt-2 text-sm text-stone-600">- Ephesians 6:5</cite>
-                            </blockquote>
-                            <p>This verse was the cornerstone of the pro-slavery argument, presented as a timeless command. It was racially justified by twisting the "Curse of Ham" (Genesis 9:25) into a divine mandate for Black enslavement.</p>
-                        </div>
-                        <div id="slavery-reality">
-                            <h4 class="text-xl font-slab font-bold mb-4">The Reality: Labor as Property</h4>
-                            <p class="mb-4">The economic reality was brutal. Human beings were legally defined as chattel—moveable property. Their labor, bodies, and children were owned by a master. This system, enforced by violent slave codes, generated immense wealth through crops like cotton, which was framed as evidence of God's blessing on the institution.</p>
-                            <div class="bg-stone-100 p-4 rounded-lg">
-                                <p><span class="font-bold">Controlling Entity:</span> Private Master</p>
-                                <p><span class="font-bold">Legal Framework:</span> Slave Codes</p>
-                                <p><span class="font-bold">Economic System:</span> Chattel Bondage</p>
-                            </div>
-                        </div>
+        <section class="era-section">
+            <div class="era-content">
+                <h2 class="section-title">The Three Eras of Submission</h2>
+                <p class="section-subtitle">The system of control evolved, but the goal remained the same: extract low-cost labor from a subjugated population. Each era developed a unique blend of religious justification and legal coercion.</p>
+                <div class="eras-container">
+                    <div class="era-column era-column-slavery">
+                        <h3>Slavery (c. 1850s)</h3>
+                        <h4>The Sermon: A "Positive Good"</h4>
+                        <p>Pulpits argued slavery was divinely ordained, portraying masters as benevolent stewards.</p>
+                        <blockquote>"Slaves, obey your earthly masters with fear and trembling..." <cite>- Eph. 6:5</cite></blockquote>
+                        <h4>The Reality: Labor as Property</h4>
+                        <p>Humans were legally defined as chattel. Slave codes enforced this system, generating immense wealth through forced labor.</p>
                     </div>
-                </div>
-
-                <div id="era-sharecropping" class="p-8 bg-white rounded-xl shadow-lg">
-                    <h3 class="text-3xl font-bold font-slab text-teal-700 mb-6 border-b-2 border-teal-200 pb-3">Era 2: Sharecropping (c. 1880s)</h3>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div id="sharecropping-scripture">
-                            <h4 class="text-xl font-slab font-bold mb-4">The Sermon: Contentment & Contract</h4>
-                            <p class="mb-4">After the Civil War, the justification shifted. Under the sacred canopy of the "Lost Cause" civil religion, sermons emphasized patience and contentment, framing poverty not as an injustice but as a spiritual trial to be endured.</p>
-                            <blockquote class="border-l-4 border-teal-600 bg-teal-50 p-4 rounded-r-lg mb-4">
-                                <p class="font-semibold text-stone-800">"And the soldiers likewise demanded of him, saying, And what shall we do? And he said unto them, Do violence to no man, neither accuse any falsely; and be content with your wages."</p>
-                                <cite class="block text-right mt-2 text-sm text-stone-600">- Luke 3:14</cite>
-                            </blockquote>
-                            <p>This passage was used to discourage demands for fair pay. The sanctity of contracts was also emphasized, morally binding sharecroppers to agreements designed to keep them in perpetual debt.</p>
-                        </div>
-                        <div id="sharecropping-reality">
-                            <h4 class="text-xl font-slab font-bold mb-4">The Reality: Labor Controlled by Debt</h4>
-                            <p class="mb-4">Slavery was "privatized." Instead of owning bodies, landowners owned debt. Sharecroppers, forced to buy supplies on credit at exorbitant rates, were trapped in a cycle of debt peonage. Restrictive "Black Codes" and vagrancy laws criminalized unemployment, forcing freedmen into exploitative labor contracts on the same land they had worked as slaves.</p>
-                            <div class="bg-stone-100 p-4 rounded-lg">
-                                <p><span class="font-bold">Controlling Entity:</span> Private Landowner/Merchant</p>
-                                <p><span class="font-bold">Legal Framework:</span> Black Codes, Crop-Lien Laws</p>
-                                <p><span class="font-bold">Economic System:</span> Debt Peonage</p>
-                            </div>
-                        </div>
+                    <div class="era-column era-column-sharecropping">
+                        <h3>Sharecropping (c. 1880s)</h3>
+                        <h4>The Sermon: Contentment</h4>
+                        <p>The "Lost Cause" civil religion framed poverty as a spiritual trial and emphasized the sanctity of contracts.</p>
+                        <blockquote>"Be content with your wages." <cite>- Luke 3:14</cite></blockquote>
+                        <h4>The Reality: Labor Controlled by Debt</h4>
+                        <p>Slavery was privatized into debt peonage, enforced by Black Codes and exploitative crop-lien laws.</p>
                     </div>
-                </div>
-
-                <div id="era-incarceration" class="p-8 bg-white rounded-xl shadow-lg">
-                    <h3 class="text-3xl font-bold font-slab text-slate-700 mb-6 border-b-2 border-slate-200 pb-3">Era 3: Mass Incarceration (c. 1990s-Present)</h3>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div id="incarceration-scripture">
-                            <h4 class="text-xl font-slab font-bold mb-4">The Sermon: Obey the State</h4>
-                            <p class="mb-4">In the late 20th century, the "tough on crime" movement, championed by the Christian Right, provided the moral justification for mass incarceration. Crime was framed as an individual moral failure, not a systemic problem, demanding a punitive, retributive response.</p>
-                            <blockquote class="border-l-4 border-slate-600 bg-slate-50 p-4 rounded-r-lg mb-4">
-                                <p class="font-semibold text-stone-800">"Let every person be subject to the governing authorities. For there is no authority except from God, and those that exist have been instituted by God."</p>
-                                <cite class="block text-right mt-2 text-sm text-stone-600">- Romans 13:1</cite>
-                            </blockquote>
-                            <p>The call to obey the "master" became a call to submit to the state and its carceral system. Prison ministries, while offering hope, often focus on individual sin, depoliticizing the systemic injustices that lead to incarceration.</p>
-                        </div>
-                        <div id="incarceration-reality">
-                            <h4 class="text-xl font-slab font-bold mb-4">The Reality: Labor as Punishment</h4>
-                            <p class="mb-4">Labor was "criminalized." The 13th Amendment's exception clause—"except as a punishment for crime"—created a legal loophole for a new form of servitude. Mass incarceration, fueled by the War on Drugs and harsh sentencing, created a vast, cheap labor pool for states and private corporations, with incarcerated workers earning pennies an hour. This is the modern heir to the convict leasing system.</p>
-                            <div class="bg-stone-100 p-4 rounded-lg">
-                                <p><span class="font-bold">Controlling Entity:</span> State & Private Corporations</p>
-                                <p><span class="font-bold">Legal Framework:</span> 13th Amendment Exception Clause</p>
-                                <p><span class="font-bold">Economic System:</span> Carceral Labor</p>
-                            </div>
-                        </div>
+                    <div class="era-column era-column-incarceration">
+                        <h3>Incarceration (c. 1990s)</h3>
+                        <h4>The Sermon: Obey the State</h4>
+                        <p>The "tough on crime" movement framed crime as individual moral failure demanding a punitive response.</p>
+                        <blockquote>"Be subject to the governing authorities." <cite>- Romans 13:1</cite></blockquote>
+                        <h4>The Reality: Labor as Punishment</h4>
+                        <p>The 13th Amendment's loophole was used to create a vast, cheap labor pool via mass incarceration.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="data" class="pt-20">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 font-slab">The Data of Disparity</h2>
-                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">
-                    The economic systems of control were never race-neutral. At every stage, they were designed to disproportionately target and control Black labor. The data clearly reveals the foundational economics and the racialized nature of these systems.
-                </p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-slab font-bold text-center mb-4 text-amber-800">Slavery: The Nation's Asset (1860)</h3>
-                    <p class="text-center text-sm text-stone-600 mb-4">The stolen value of enslaved people was the single largest financial asset in the U.S. economy, worth more than all manufacturing and railroads combined.</p>
-                    <div class="chart-container">
-                        <canvas id="slaveryChart"></canvas>
+        <section class="era-section">
+            <div class="era-content">
+                <h2 class="section-title">The Data of Disparity</h2>
+                <p class="section-subtitle">At every stage, these systems were designed to disproportionately target and control Black labor. The data reveals the foundational economics and the resulting racialized disparities.</p>
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h4 class="font-slab" style="color:var(--amber-accent)">Slavery: The Nation's Primary Asset</h4>
+                        <p>In 1860, the financial value of enslaved people was the single largest asset in the US, worth more than all manufacturing and railroads combined.</p>
+                        <div class="chart-container"><canvas id="slaveryChart"></canvas></div>
+                        <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: "Slavery's Capitalism", Beckert & Rockman</p>
                     </div>
-                    <p class="text-xs text-center text-stone-500 mt-4">Source: "Slavery's Capitalism" by Sven Beckert & Seth Rockman</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-slab font-bold text-center mb-4 text-teal-800">Sharecropping: A Racial Trap (MS, 1900)</h3>
-                    <p class="text-center text-sm text-stone-600 mb-4">While many poor whites were sharecroppers, the system trapped a far higher percentage of the Black farming population, preventing economic independence.</p>
-                    <div class="chart-container">
-                        <canvas id="sharecroppingChart"></canvas>
+                    <div class="chart-card">
+                        <h4 class="font-slab" style="color:var(--teal-accent)">Sharecropping: A Racial Trap</h4>
+                        <p>By 1900 in Mississippi, the sharecropping system had trapped a far higher percentage of the Black farming population than the white.</p>
+                        <div class="chart-container"><canvas id="sharecroppingChart"></canvas></div>
+                         <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: U.S. Census Data, 1900</p>
                     </div>
-                    <p class="text-xs text-center text-stone-500 mt-4">Source: U.S. Census Data, 1900</p>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-slab font-bold text-center mb-4 text-slate-800">Incarceration: A Racial Disparity (NC, 2022)</h3>
-                    <p class="text-center text-sm text-stone-600 mb-4">The legacy of racial control is starkly visible in modern prison demographics, where Black citizens are dramatically overrepresented.</p>
-                    <div class="chart-container">
-                        <canvas id="incarcerationChart"></canvas>
+                    <div class="chart-card">
+                        <h4 class="font-slab" style="color:var(--slate-accent)">Incarceration: A Stark Disparity</h4>
+                        <p>In North Carolina today (2022), Black people are dramatically overrepresented in prisons compared to their share of the general population.</p>
+                        <div class="chart-container"><canvas id="incarcerationChart"></canvas></div>
+                         <p style="font-size: 0.75rem; text-align: right; margin-top: 1rem;">Source: N.C. Dept. of Public Safety, 2022</p>
                     </div>
-                    <p class="text-xs text-center text-stone-500 mt-4">Source: N.C. Dept. of Public Safety</p>
                 </div>
             </div>
         </section>
 
-        <section id="casestudy" class="pt-24">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 font-slab">Case Study: Durham, North Carolina</h2>
-                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">
-                    The evolution from plantation to prison is not just an abstract theory—it is a lived reality grounded in specific places. The history of Durham, NC, reveals the unbroken chain connecting slavery, sharecropping, and modern prison labor.
-                </p>
-            </div>
-            <div class="bg-white p-8 rounded-xl shadow-lg">
-                <div class="flex flex-col md:flex-row items-center justify-around space-y-8 md:space-y-0 md:space-x-4">
-                    <div class="text-center">
-                        <h4 class="text-xl font-slab font-bold">THEN: Stagville Plantation</h4>
-                        <p class="mt-2 max-w-xs">One of NC's largest plantations, its wealth was built on the forced labor of over 900 enslaved people.</p>
+        <section class="era-section">
+            <div class="era-content">
+                <h2 class="section-title">Case Study: Durham, North Carolina</h2>
+                <p class="section-subtitle">The evolution from plantation to prison is a lived reality. The history of Durham reveals the unbroken chain connecting these systems on the very same land.</p>
+                <div class="case-study-container">
+                    <div class="case-study-flow">
+                        <div class="text-center">
+                            <h4>THEN: Stagville Plantation</h4>
+                            <p class="text-sm text-secondary mt-2">Wealth built on the forced labor of over 900 enslaved people.</p>
+                        </div>
+                        <div class="arrow">&rarr;</div>
+                        <div class="text-center">
+                            <h4>LATER: Debt Peonage</h4>
+                            <p class="text-sm text-secondary mt-2">Freedmen became sharecroppers on the same land, trapped by debt.</p>
+                        </div>
+                        <div class="arrow">&rarr;</div>
+                        <div class="text-center">
+                            <h4>NOW: Correction Enterprises</h4>
+                            <p class="text-sm text-secondary mt-2">NC's prison labor system, disproportionately Black, works state land for pennies an hour.</p>
+                        </div>
                     </div>
-                    <div class="text-5xl text-stone-300 font-thin transform rotate-90 md:rotate-0">&rarr;</div>
-                    <div class="text-center">
-                        <h4 class="text-xl font-slab font-bold">LATER: Debt Peonage</h4>
-                        <p class="mt-2 max-w-xs">After 1865, many freedmen became sharecroppers on the same land, trapped in a cycle of debt to the former masters.</p>
-                    </div>
-                    <div class="text-5xl text-stone-300 font-thin transform rotate-90 md:rotate-0">&rarr;</div>
-                    <div class="text-center">
-                        <h4 class="text-xl font-slab font-bold">NOW: Correction Enterprises</h4>
-                        <p class="mt-2 max-w-xs">Today, NC's prison labor system, disproportionately Black, produces goods and food on state land for pennies an hour.</p>
-                    </div>
-                </div>
-                <div class="mt-8 border-t border-stone-200 pt-6">
-                    <p class="text-stone-700">The economic link is direct: from unpaid agricultural labor on a plantation, to near-unpaid agricultural labor by sharecroppers, to near-unpaid agricultural and manufacturing labor in state prisons. The system's continuity is physically grounded in the soil of North Carolina.</p>
                 </div>
             </div>
         </section>
         
-        <section id="resistance" class="pt-24">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 font-slab">The Counter-Pulpit of Resistance</h2>
-                <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">
-                    The sermons of submission never went unchallenged. In every era, a powerful counter-theology of liberation existed, championed by abolitionists, the Black Church, and justice advocates who read the same Bible and found a message of freedom, not bondage.
-                </p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-slab font-bold mb-4">Theology of Liberation</h3>
-                    <p class="mb-4">Abolitionists like Frederick Douglass and enslaved Christians drew hope from passages about equality and freedom. The story of the Exodus—God liberating the oppressed from bondage—provided a revolutionary motivation that directly contradicted the slaveholder's theology.</p>
-                    <blockquote class="border-l-4 border-amber-600 bg-amber-50 p-4 rounded-r-lg">
-                        <p class="font-semibold text-stone-800">"There is neither Jew nor Gentile, neither slave nor free, nor is there male and female, for you are all one in Christ Jesus."</p>
-                        <cite class="block text-right mt-2 text-sm text-stone-600">- Galatians 3:28</cite>
-                    </blockquote>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 class="text-xl font-slab font-bold mb-4">The Black Church & Modern Dissent</h3>
-                    <p class="mb-4">After emancipation, the Black Church became the epicenter of resistance, organizing for political and economic power. Today, Black faith leaders and a growing number of conservative and mainline Christians are at the forefront of the movement to end mass incarceration, arguing for a justice that is restorative, not just retributive.</p>
-                    <p class="font-semibold">This dissent shows that the theological consensus that has propped up these systems is fracturing.</p>
+        <section class="era-section">
+            <div class="era-content">
+                <h2 class="section-title">Resistance & A Call for Reckoning</h2>
+                <p class="section-subtitle">The sermons of submission never went unchallenged. This history demands critical thought and action today.</p>
+                <div class="conclusion-container">
+                    <div class="chart-card">
+                        <h3 class="font-slab text-xl text-accent-secondary mb-4">The Counter-Pulpit</h3>
+                        <p class="mb-4">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story—God liberating the oppressed—to fight for freedom.</p>
+                        <blockquote class="border-l-4 p-4" style="border-color: var(--accent-secondary)">"There is neither Jew nor Gentile, neither slave nor free... for you are all one in Christ Jesus." <cite class="text-sm block text-right">- Galatians 3:28</cite></blockquote>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="font-slab text-xl text-accent-secondary mb-4">Action & Discussion</h3>
+                        <h4 class="font-bold text-sm uppercase tracking-wide">Discussion Questions</h4>
+                        <ul class="list-disc list-inside my-2 text-secondary text-sm">
+                            <li>How are scriptural interpretations used to justify political or economic systems today?</li>
+                            <li>How can we recognize and resist religious justifications for injustice?</li>
+                        </ul>
+                        <h4 class="font-bold text-sm uppercase tracking-wide mt-4">Action Steps</h4>
+                        <ul class="list-disc list-inside my-2 text-secondary text-sm">
+                             <li>Support criminal justice reform initiatives.</li>
+                             <li>Engage with local racial and economic justice organizations.</li>
+                             <li>Promote voter education on prison labor and sentencing reform.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
 
-    </main>
-    
-    <footer class="bg-stone-800 text-stone-300 mt-20">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-8">
-                <h3 class="text-2xl font-slab text-white">A Call for Reckoning</h3>
-                <p class="mt-2 text-stone-400">Understanding this history is the first step. What can we do now?</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8 text-sm">
-                <div>
-                    <h4 class="font-bold text-white mb-2">Generated Discussion Questions</h4>
-                    <ul class="space-y-2 list-disc list-inside">
-                        <li>How do modern leaders use similar scriptural interpretations today?</li>
-                        <li>What economic systems today rely on low-wage or unpaid labor?</li>
-                        <li>How can we recognize and resist religious justifications for injustice?</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white mb-2">Potential Action Steps</h4>
-                    <ul class="space-y-2 list-disc list-inside">
-                        <li>Support criminal justice reform initiatives.</li>
-                        <li>Engage with local organizations working on racial and economic justice.</li>
-                        <li>Promote voter education on issues of prison labor and sentencing reform.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white mb-2">About This Project</h4>
-                    <p>This interactive experience is based on the research report "Sermons of Submission: A Theological and Economic History of American Labor Control, 1850-Present." It aims to make complex history accessible and provoke critical thought.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.querySelector('.cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.main-container');
+            const navDots = document.querySelectorAll('.nav-dot');
+            navDots.forEach((dot, index) => {
+                dot.addEventListener('click', () => container.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' }));
+            });
+            container.addEventListener('scroll', () => {
+                const sectionIndex = Math.round(container.scrollLeft / window.innerWidth);
+                navDots.forEach((dot, index) => dot.classList.toggle('active', index === sectionIndex));
+            });
 
-    const matrixCells = document.querySelectorAll('.matrix-cell');
-    matrixCells.forEach(cell => {
-        cell.addEventListener('click', () => {
-            const targetId = cell.dataset.target;
-            const targetElement = document.getElementById(targetId);
-            if(targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                targetElement.classList.add('transition', 'duration-500', 'bg-yellow-100');
-                setTimeout(() => {
-                    targetElement.classList.remove('bg-yellow-100');
-                }, 2000);
-            }
+            // CHART DEFAULTS
+            Chart.defaults.color = 'rgba(148, 163, 184, 1)';
+            Chart.defaults.borderColor = 'rgba(148, 163, 184, 0.2)';
+
+            // Slavery Chart
+            const slaveryCtx = document.getElementById('slaveryChart').getContext('2d');
+            new Chart(slaveryCtx, {
+                type: 'bar',
+                data: { labels: ['Value of Enslaved People', 'All US Manufacturing & Railroads'], datasets: [{ label: 'Value in 1860 ($ Billions)', data: [3.7, 3.0], backgroundColor: ['rgba(245, 158, 11, 0.6)', 'rgba(100, 116, 139, 0.6)'], borderColor: ['rgba(245, 158, 11, 1)', 'rgba(100, 116, 139, 1)'], borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: (value) => '$' + value + 'B' } } } }
+            });
+
+            // Sharecropping Chart
+            const sharecroppingCtx = document.getElementById('sharecroppingChart').getContext('2d');
+            new Chart(sharecroppingCtx, {
+                type: 'bar',
+                data: { labels: ['Black Farmers', 'White Farmers'], datasets: [{ label: '% as Tenants/Sharecroppers', data: [85, 36], backgroundColor: ['rgba(20, 184, 166, 0.6)', 'rgba(100, 116, 139, 0.6)'], borderColor: ['rgba(20, 184, 166, 1)', 'rgba(100, 116, 139, 1)'], borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { max: 100, ticks: { callback: (value) => value + '%' } } } }
+            });
+
+            // Incarceration Chart
+            const incarcerationCtx = document.getElementById('incarcerationChart').getContext('2d');
+            new Chart(incarcerationCtx, {
+                type: 'bar',
+                data: { labels: ['Black Population', 'White Population'], datasets: [ { label: 'General State %', data: [22.2, 67.8], backgroundColor: 'rgba(100, 116, 139, 0.6)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 1 }, { label: 'Prison Population %', data: [50, 41], backgroundColor: 'rgba(51, 65, 85, 0.7)', borderColor: 'rgba(30, 41, 59, 1)', borderWidth: 1 } ] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } }, scales: { y: { max: 100, ticks: { callback: (value) => value + '%' } } } }
+            });
         });
-        cell.style.cursor = 'pointer';
-        cell.classList.add('p-4', 'bg-white', 'hover:bg-yellow-50', 'transition-colors', 'duration-200');
-    });
-
-    // --- SCRIPT FOR NEW SLAVERY CHART ---
-    const slaveryCtx = document.getElementById('slaveryChart').getContext('2d');
-    new Chart(slaveryCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Value of Enslaved People', 'Value of All US Manufacturing & Railroads'],
-            datasets: [{
-                label: 'Value in 1860 (Billions)',
-                data: [3.7, 3.0],
-                backgroundColor: ['rgba(202, 138, 4, 0.7)', 'rgba(214, 211, 209, 0.7)'],
-                borderColor: ['rgba(202, 138, 4, 1)', 'rgba(120, 113, 108, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, ticks: { callback: (value) => '$' + value + 'B' } } },
-            plugins: { legend: { display: false } }
-        }
-    });
-
-    const sharecroppingCtx = document.getElementById('sharecroppingChart').getContext('2d');
-    new Chart(sharecroppingCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Black Farmers', 'White Farmers'],
-            datasets: [{
-                label: '% of Farming Population as Tenants/Sharecroppers',
-                data: [85, 36],
-                backgroundColor: ['rgba(13, 110, 112, 0.7)', 'rgba(203, 213, 225, 0.7)'],
-                borderColor: ['rgba(13, 110, 112, 1)', 'rgba(100, 116, 139, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, max: 100, ticks: { callback: (value) => value + '%' } } },
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.raw}%` } } }
-        }
-    });
-
-    const incarcerationCtx = document.getElementById('incarcerationChart').getContext('2d');
-    new Chart(incarcerationCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Black Population', 'White Population'],
-            datasets: [
-                { label: 'General State Population %', data: [22.2, 67.8], backgroundColor: 'rgba(203, 213, 225, 0.7)', borderColor: 'rgba(100, 116, 139, 1)', borderWidth: 1 },
-                { label: 'Male Prison Population % (30-39 Age Bracket)', data: [50, 41], backgroundColor: 'rgba(51, 65, 85, 0.7)', borderColor: 'rgba(30, 41, 59, 1)', borderWidth: 1 }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, max: 100, ticks: { callback: (value) => value + '%' } } },
-            plugins: { tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${context.raw}%` } } }
-        }
-    });
-    
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
-
-    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.4 };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                let currentSectionId = entry.target.id;
-                // Special handling for multiple sections under one nav link
-                if (currentSectionId.startsWith('era-')) {
-                    currentSectionId = 'eras';
-                }
-
-                navLinks.forEach(link => {
-                    if (link.getAttribute('href').substring(1) === currentSectionId) {
-                        link.classList.add('active-nav');
-                        link.classList.remove('inactive-nav');
-                    } else {
-                        link.classList.remove('active-nav');
-                        link.classList.add('inactive-nav');
-                    }
-                });
-            }
-        });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        observer.observe(section);
-    });
-
-});
-</script>
+    </script>
 </body>
 </html>
