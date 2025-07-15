@@ -31,7 +31,6 @@
 
         h1, h2, h3, h4, .font-slab { font-family: 'Roboto Slab', serif; }
         
-        /* Main Layout */
         .main-container {
             height: 100vh;
             display: flex;
@@ -70,7 +69,7 @@
             margin: 0 auto 3rem auto;
         }
 
-        /* --- NEW ANIMATION STYLES --- */
+        /* Animation Styles */
         .animatable {
             opacity: 0;
             transform: translateY(30px);
@@ -117,43 +116,37 @@
         .era-column-incarceration blockquote { border-color: var(--slate-accent); }
         
         /* Data & Case Study */
-        .charts-container, .conclusion-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; width: 100%; }
-        .chart-card, .conclusion-card { position: relative; background-color: var(--background-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .charts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; width: 100%; }
+        .chart-card { position: relative; background-color: var(--background-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .chart-container { position: relative; width: 100%; height: 250px; }
         .chart-card > p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
         .case-study-container { background-color: var(--background-card); padding: 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 1200px; margin: 0 auto; }
         .case-study-flow { display: flex; flex-direction: column; md:flex-direction: row; align-items: center; justify-content: space-around; gap: 1rem; }
         .case-study-flow h4 { color: var(--text-primary); font-size: 1.25rem; }
         .case-study-flow .arrow { font-size: 2.5rem; color: var(--border-color); }
+        .external-link { color: var(--amber-accent); text-decoration: underline; text-underline-offset: 4px; transition: color 0.2s; }
+        .external-link:hover { color: var(--text-primary); }
 
-        /* --- NEW ANNOTATION STYLES --- */
-        .chart-annotation {
-            position: absolute;
-            background: var(--text-primary);
-            color: var(--background-card);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            max-width: 150px;
-            text-align: center;
-            line-height: 1.4;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            pointer-events: none;
+        /* Annotation Styles */
+        .chart-annotation { position: absolute; background: var(--text-primary); color: var(--background-card); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; max-width: 150px; text-align: center; line-height: 1.4; box-shadow: 0 5px 15px rgba(0,0,0,0.2); pointer-events: none; }
+        .chart-annotation::after { content: ''; position: absolute; width: 0; height: 0; border-style: solid; }
+        .annotation-right::after { top: 50%; left: -10px; margin-top: -5px; border-width: 5px 10px 5px 0; border-color: transparent var(--text-primary) transparent transparent; }
+
+        /* Conclusion Card */
+        .conclusion-card {
+            background-color: var(--background-card);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
         }
-        .chart-annotation::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
-        }
-        .annotation-right::after {
-            top: 50%;
-            left: -10px;
-            margin-top: -5px;
-            border-width: 5px 10px 5px 0;
-            border-color: transparent var(--text-primary) transparent transparent;
-        }
+        .conclusion-card blockquote { margin-bottom: 2rem; border-left: 4px solid var(--amber-accent); padding: 1rem; background-color: #F5F5F4; }
+        .conclusion-card h4 { font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 1rem; }
+        .conclusion-card ul { list-style-position: inside; color: var(--text-primary); line-height: 1.8; }
+
 
         /* Navigation */
         .nav-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 15px; background: rgba(255, 255, 255, 0.7); padding: 10px 15px; border-radius: 20px; backdrop-filter: blur(5px); border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -228,11 +221,11 @@
         <section class="era-section">
             <div class="era-content">
                 <h2 class="section-title animatable">The Data of Disparity</h2>
-                <p class="section-subtitle animatable delay-1">At every stage, these systems were designed to disproportionately target and control Black labor.</p>
+                <p class="section-subtitle animatable delay-1">At every stage, these systems were designed to disproportionately target and control Black labor. The data reveals the foundational economics and the resulting racialized disparities.</p>
                 <div class="charts-container">
                     <div class="chart-card animatable delay-2">
                         <h4 class="font-slab" style="color:var(--amber-accent)">Slavery: The Nation's Primary Asset</h4>
-                        <p>In 1860, the financial value of enslaved people was the single largest asset in the US, worth more than all industry and railroads combined.</p>
+                        <p>In 1860, the financial value of enslaved people was the single largest asset in the US, worth more than all manufacturing and railroads combined.</p>
                         <div class="chart-container"><canvas id="slaveryChart"></canvas></div>
                         <div class="chart-annotation animatable delay-4 annotation-right" style="top: 20%; left: 45%;"><strong>$3.7 Billion</strong> in stolen human capital</div>
                     </div>
@@ -259,15 +252,18 @@
                 <div class="case-study-container animatable delay-2">
                     <div class="case-study-flow">
                         <div class="text-center animatable delay-2">
-                            <h4>THEN: Stagville Plantation</h4><p class="text-sm text-secondary mt-2">Wealth built on the forced labor of over 900 enslaved people.</p>
+                            <h4>THEN: <a href="https://historicsites.nc.gov/all-sites/historic-stagville" target="_blank" rel="noopener noreferrer" class="external-link">Stagville Plantation</a></h4>
+                            <p class="text-sm text-secondary mt-2">Wealth built on the forced labor of over 900 enslaved people.</p>
                         </div>
                         <div class="arrow animatable delay-3">&rarr;</div>
                         <div class="text-center animatable delay-3">
-                            <h4>LATER: Debt Peonage</h4><p class="text-sm text-secondary mt-2">Freedmen became sharecroppers on the same land, trapped by debt.</p>
+                            <h4>LATER: Debt Peonage</h4>
+                            <p class="text-sm text-secondary mt-2">Freedmen became sharecroppers on the same land, trapped by debt.</p>
                         </div>
                         <div class="arrow animatable delay-4">&rarr;</div>
                         <div class="text-center animatable delay-4">
-                            <h4>NOW: Correction Enterprises</h4><p class="text-sm text-secondary mt-2">NC's prison labor system works state land for pennies an hour.</p>
+                            <h4>NOW: Correction Enterprises</h4>
+                            <p class="text-sm text-secondary mt-2">NC's prison labor system works state land for pennies an hour.</p>
                         </div>
                     </div>
                 </div>
@@ -276,27 +272,17 @@
         
         <section class="era-section">
             <div class="era-content">
-                <h2 class="section-title animatable">Resistance & A Call for Reckoning</h2>
-                <p class="section-subtitle animatable delay-1">The sermons of submission never went unchallenged. This history demands critical thought and action today.</p>
-                <div class="conclusion-container">
-                    <div class="conclusion-card animatable delay-2">
-                        <h3 class="font-slab text-xl text-primary mb-4">The Counter-Pulpit</h3>
-                        <p class="mb-4 text-secondary">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story to fight for freedom.</p>
-                        <blockquote class="border-l-4 p-4" style="border-color: var(--amber-accent)">"There is neither Jew nor Gentile, neither slave nor free... for you are all one in Christ Jesus." <cite class="text-sm block text-right">- Galatians 3:28</cite></blockquote>
-                    </div>
-                    <div class="conclusion-card animatable delay-3">
-                        <h3 class="font-slab text-xl text-primary mb-4">Action & Discussion</h3>
-                        <h4 class="font-bold text-sm uppercase tracking-wide">Discussion Questions</h4>
-                        <ul class="list-disc list-inside my-2 text-secondary text-sm">
-                            <li>How are scriptural interpretations used to justify political or economic systems today?</li>
-                            <li>How can we recognize and resist religious justifications for injustice?</li>
-                        </ul>
-                        <h4 class="font-bold text-sm uppercase tracking-wide mt-4">Action Steps</h4>
-                        <ul class="list-disc list-inside my-2 text-secondary text-sm">
-                             <li>Support criminal justice reform initiatives.</li>
-                             <li>Engage with local racial and economic justice organizations.</li>
-                        </ul>
-                    </div>
+                <h2 class="section-title animatable">Resistance & Reflection</h2>
+                <p class="section-subtitle animatable delay-1">The sermons of submission never went unchallenged. This history demands critical thought today.</p>
+                <div class="conclusion-card animatable delay-2">
+                    <h3 class="font-slab text-xl text-primary mb-4">The Counter-Pulpit</h3>
+                    <p class="mb-4 text-secondary">In every era, a powerful counter-theology of liberation existed. Abolitionists and the Black Church drew on passages of equality and the Exodus story—God liberating the oppressed—to fight for freedom.</p>
+                    <blockquote>"There is neither Jew nor Gentile, neither slave nor free... for you are all one in Christ Jesus." <cite class="text-sm block text-right">- Galatians 3:28</cite></blockquote>
+                    <h4 class="font-bold text-sm uppercase tracking-wide mt-8">Discussion Questions</h4>
+                    <ul class="list-disc list-inside my-2 text-secondary">
+                        <li>How are scriptural interpretations used to justify political or economic systems today?</li>
+                        <li>How can we recognize and resist religious justifications for injustice?</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -336,7 +322,7 @@
             Chart.defaults.borderColor = 'var(--border-color)';
             Chart.defaults.font.family = "'Inter', sans-serif";
 
-            // Chart Initialization (rest of the chart code is the same)
+            // Chart Initialization
             const slaveryCtx = document.getElementById('slaveryChart').getContext('2d');
             new Chart(slaveryCtx, { type: 'bar', data: { labels: ['Value of Enslaved People', 'All US Manufacturing & Railroads'], datasets: [{ label: 'Value in 1860 ($ Billions)', data: [3.7, 3.0], backgroundColor: ['rgba(217, 119, 6, 0.7)', 'rgba(120, 113, 108, 0.5)'], borderColor: ['rgba(217, 119, 6, 1)', 'rgba(120, 113, 108, 1)'], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: (value) => '$' + value + 'B' } } } } });
             const sharecroppingCtx = document.getElementById('sharecroppingChart').getContext('2d');
